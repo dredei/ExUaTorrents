@@ -66,7 +66,6 @@
             this.tbLink.Name = "tbLink";
             this.tbLink.Size = new System.Drawing.Size(269, 20);
             this.tbLink.TabIndex = 1;
-            this.tbLink.Text = "http://www.ex.ua/view/8175702";
             this.tbLink.TextChanged += new System.EventHandler(this.tbLink_TextChanged);
             this.tbLink.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbLink_KeyDown);
             // 

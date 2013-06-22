@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Donate;
 using ExtensionMethods;
 using Ini;
-using Donate;
-using System.Diagnostics;
 
 namespace ExUa_Torrents
 {
@@ -88,6 +83,11 @@ namespace ExUa_Torrents
         {
             if ( btnDownload.Tag.ToString() == "0" )
             {
+                if ( string.IsNullOrEmpty( tbLink.Text ) || tbLink.Text.IndexOf( "ex.ua/view/" ) < 0 )
+                {
+                    MessageBox.Show( "Укажите корректную ссылку!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                    return;
+                }
                 string torrentSavePath = cbTorrentSavePath.Text;
                 eu = new ExUa( tmpFolderPath, torrentClientPath, torrentSavePath, clearTempFolder );
                 eu.updEvent += new EventHandler<UpdEventArgs>( updProgress );

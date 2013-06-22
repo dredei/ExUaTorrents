@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using RestSharp;
-using ExtensionMethods;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using ExtensionMethods;
+using RestSharp;
 
 namespace ExUa_Torrents
 {
