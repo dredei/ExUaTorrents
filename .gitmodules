@@ -1,3 +1,6 @@
 [submodule "ExtensionMethods"]
 	path = ExtensionMethods
 	url = https://dredei@bitbucket.org/dredei/extensionmethods.git
+[submodule "IniFiles"]
+	path = IniFiles
+	url = https://dredei@bitbucket.org/dredei/inifiles.git

@@ -23,6 +23,10 @@ namespace ExUa_Torrents
             InitializeComponent();
         }
 
+        public void loadSettings()
+        {
+        }
+
         private void printFiles()
         {
             lvFiles.Items.Clear();
