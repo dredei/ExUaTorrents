@@ -67,12 +67,18 @@ namespace ExUa_Torrents
             }
         }
 
+        private void updProgress( object sender, UpdEventArgs e )
+        {
+            ssStatus.Items[ 0 ].Text = "{0} / {1}".f( e.progress, e.maxProgress );
+        }
+
         private void work()
         {
             if ( btnDownload.Tag.ToString() == "0" )
             {
                 string torrentSavePath = cbTorrentSavePath.Text;
                 eu = new ExUa( tmpFolderPath, torrentClientPath, torrentSavePath, clearTempFolder );
+                eu.updEvent += new EventHandler<UpdEventArgs>( updProgress );
                 eu.getFiles( tbLink.Text );
                 files = eu.getLocalFiles( rbTorrents.Checked );
                 printFiles();
@@ -89,6 +95,7 @@ namespace ExUa_Torrents
                     eu.downloadTorrents();
                 }
             }
+            ssStatus.Items[ 0 ].Text = "Завершено!";
         }
 
         private void btnDownload_Click( object sender, EventArgs e )
@@ -134,6 +141,7 @@ namespace ExUa_Torrents
 
         private void frmMain_Load( object sender, EventArgs e )
         {
+            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
             loadSettings();
             cbTorrentSavePath.SelectedIndex = 0;
         }

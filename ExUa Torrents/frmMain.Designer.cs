@@ -33,7 +33,7 @@
             this.lvFiles = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.ssStatus = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.rbTorrents = new System.Windows.Forms.RadioButton();
             this.rbAll = new System.Windows.Forms.RadioButton();
@@ -43,7 +43,7 @@
             this.btnSelDir = new System.Windows.Forms.Button();
             this.cbTorrentSavePath = new System.Windows.Forms.ComboBox();
             this.fbd1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.statusStrip1.SuspendLayout();
+            this.ssStatus.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -90,16 +90,16 @@
             // 
             this.columnHeader2.Text = "Размер";
             // 
-            // statusStrip1
+            // ssStatus
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ssStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 338);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(275, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
+            this.ssStatus.Location = new System.Drawing.Point(0, 338);
+            this.ssStatus.Name = "ssStatus";
+            this.ssStatus.Size = new System.Drawing.Size(275, 22);
+            this.ssStatus.SizingGrip = false;
+            this.ssStatus.TabIndex = 3;
+            this.ssStatus.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
@@ -199,7 +199,7 @@
             this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.rbAll);
             this.Controls.Add(this.rbTorrents);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.ssStatus);
             this.Controls.Add(this.lvFiles);
             this.Controls.Add(this.tbLink);
             this.Controls.Add(this.label1);
@@ -210,8 +210,8 @@
             this.Text = "ExUa Torrents";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.ssStatus.ResumeLayout(false);
+            this.ssStatus.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,7 +224,7 @@
         private System.Windows.Forms.ListView lvFiles;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip ssStatus;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.RadioButton rbTorrents;
         private System.Windows.Forms.RadioButton rbAll;

@@ -14,15 +14,10 @@ using System.Windows.Forms;
 
 namespace ExUa_Torrents
 {
-    public class ExUaFile
+    public class UpdEventArgs : EventArgs
     {
-        public string name = string.Empty;
-        public string url = string.Empty;
-        public string torrentUrl = string.Empty;
-        public long size = 0;
-        public long fileId = -1;
-        public long arrIndex = -1;
-        public bool check = false;
+        public int progress { get; set; }
+        public int maxProgress { get; set; }
     }
 
     public class ExUa
@@ -39,6 +34,7 @@ namespace ExUa_Torrents
         string tmpFolderPath;
         string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
         string torrentSavePath;
+        public event EventHandler<UpdEventArgs> updEvent = delegate { };
 
         public ExUa( string tmpFolderPath, string torrentClientPath, string torrentSavePath,
             bool clearTempFolder )
@@ -58,7 +54,7 @@ namespace ExUa_Torrents
             return result;
         }
 
-        public string getTorrentClientByPath(string path)
+        public string getTorrentClientByPath( string path )
         {
             return Path.GetFileNameWithoutExtension( path );
         }
@@ -205,12 +201,18 @@ namespace ExUa_Torrents
         public void downloadFile()
         {
             List<string> downFiles = new List<string>();
+            UpdEventArgs args = new UpdEventArgs();
+            args.progress = 0;
+            args.maxProgress = this.files.Count;
+            updEvent( this, args );
             for ( int i = 0; i < this.files.Count; i++ )
             {
                 if ( this.files[ i ].check )
                 {
                     downFiles.Add( "http://www.ex.ua" + this.files[ i ].url );
                 }
+                args.progress++;
+                updEvent( this, args );
             }
             if ( downFiles.Count > 0 )
             {
@@ -237,6 +239,10 @@ namespace ExUa_Torrents
 
         public void downloadTorrents()
         {
+            UpdEventArgs args = new UpdEventArgs();
+            args.progress = 0;
+            args.maxProgress = this.files.Count;
+            updEvent( this, args );
             for ( int i = 0; i < this.files.Count; i++ )
             {
                 if ( this.files[ i ].check )
@@ -246,6 +252,8 @@ namespace ExUa_Torrents
                     downloadFile( torrentUrl, fileName );
                     injectTorrent( fileName, torrentSavePath );
                 }
+                args.progress++;
+                updEvent( this, args );
             }
         }
     }

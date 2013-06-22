@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExUa.cs" />
+    <Compile Include="ExUaFile.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
