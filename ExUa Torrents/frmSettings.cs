@@ -46,6 +46,7 @@ namespace ExUa_Torrents
         private void btnOk_Click( object sender, EventArgs e )
         {
             saveSettings();
+            MainForm.saveSettings();
             this.Close();
         }
 

@@ -42,6 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnSelDir = new System.Windows.Forms.Button();
             this.cbTorrentSavePath = new System.Windows.Forms.ComboBox();
+            this.fbd1 = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -173,6 +174,7 @@
             this.btnSelDir.TabIndex = 10;
             this.btnSelDir.Text = "...";
             this.btnSelDir.UseVisualStyleBackColor = true;
+            this.btnSelDir.Click += new System.EventHandler(this.btnSelDir_Click);
             // 
             // cbTorrentSavePath
             // 
@@ -206,6 +208,7 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ExUa Torrents";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -230,6 +233,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSelDir;
         private System.Windows.Forms.ComboBox cbTorrentSavePath;
+        private System.Windows.Forms.FolderBrowserDialog fbd1;
     }
 }
 

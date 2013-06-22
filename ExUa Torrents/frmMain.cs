@@ -5,8 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using ExtensionMethods;
+using Ini;
 
 namespace ExUa_Torrents
 {
@@ -14,6 +16,7 @@ namespace ExUa_Torrents
     {
         List<ExUaFile> files;
         ExUa eu = null;
+        Thread thr = null;
         public string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
         public string tmpFolderPath = "C:\\tmpExUa";
         public bool clearTempFolder = false;
@@ -25,6 +28,18 @@ namespace ExUa_Torrents
 
         public void loadSettings()
         {
+            IniFile ini = new IniFile( Application.StartupPath + @"\Settings.ini" );
+            torrentClientPath = ini.Read( "TorrentClientPath", "Options", torrentClientPath );
+            tmpFolderPath = ini.Read( "TmpFolderPath", "Options", tmpFolderPath );
+            clearTempFolder = bool.Parse( ini.Read( "ClearTmpFolder", "Options", clearTempFolder.ToString() ) );
+        }
+
+        public void saveSettings()
+        {
+            IniFile ini = new IniFile( Application.StartupPath + @"\Settings.ini" );
+            ini.Write( "TorrentClientPath", torrentClientPath, "Options" );
+            ini.Write( "TmpFolderPath", tmpFolderPath, "Options" );
+            ini.Write( "ClearTmpFolder", clearTempFolder.ToString(), "Options" );
         }
 
         private void printFiles()
@@ -52,7 +67,7 @@ namespace ExUa_Torrents
             }
         }
 
-        private void btnDownload_Click( object sender, EventArgs e )
+        private void work()
         {
             if ( btnDownload.Tag.ToString() == "0" )
             {
@@ -74,6 +89,12 @@ namespace ExUa_Torrents
                     eu.downloadTorrents();
                 }
             }
+        }
+
+        private void btnDownload_Click( object sender, EventArgs e )
+        {
+            thr = new Thread( work );
+            thr.Start();
         }
 
         private void lvFiles_ItemChecked( object sender, ItemCheckedEventArgs e )
@@ -113,6 +134,7 @@ namespace ExUa_Torrents
 
         private void frmMain_Load( object sender, EventArgs e )
         {
+            loadSettings();
             cbTorrentSavePath.SelectedIndex = 0;
         }
 
@@ -120,6 +142,23 @@ namespace ExUa_Torrents
         {
             frmSettings frm = new frmSettings( this );
             frm.ShowDialog();
+        }
+
+        private void btnSelDir_Click( object sender, EventArgs e )
+        {
+            fbd1.SelectedPath = cbTorrentSavePath.Text;
+            if ( fbd1.ShowDialog() == DialogResult.OK )
+            {
+                cbTorrentSavePath.Text = fbd1.SelectedPath;
+            }
+        }
+
+        private void frmMain_FormClosed( object sender, FormClosedEventArgs e )
+        {
+            if ( thr != null )
+            {
+                thr.Abort();
+            }
         }
     }
 }
