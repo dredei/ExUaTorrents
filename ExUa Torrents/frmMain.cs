@@ -14,6 +14,11 @@ namespace ExUa_Torrents
     {
         List<ExUaFile> files;
         ExUa eu = null;
+        string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
+        string tmpFolderPath = "C:\\tmpExUa";
+        string torrentClient = "BitTorrent";
+        string torrentSavePath = "C:\\tmpSave";
+        bool clearFolder = false;
 
         public frmMain()
         {
@@ -22,6 +27,7 @@ namespace ExUa_Torrents
 
         private void printFiles()
         {
+            lvFiles.Items.Clear();
             for ( int i = 0; i < files.Count; i++ )
             {
                 ListViewItem lvi = new ListViewItem();
@@ -31,25 +37,39 @@ namespace ExUa_Torrents
             }
         }
 
+        private void changeDownloadButtonTag( string tag )
+        {
+            btnDownload.Tag = tag;
+            if ( btnDownload.Tag.ToString() == "0" )
+            {
+                btnDownload.Text = "Получить список файлов";
+            }
+            else if ( btnDownload.Tag.ToString() == "1" )
+            {
+                btnDownload.Text = "Загрузить";
+            }
+        }
+
         private void btnDownload_Click( object sender, EventArgs e )
         {
             if ( btnDownload.Tag.ToString() == "0" )
             {
-                eu = new ExUa();
+                eu = new ExUa( tmpFolderPath, torrentClient, torrentClientPath, torrentSavePath, clearFolder );
                 eu.getFiles( tbLink.Text );
                 files = eu.getLocalFiles( rbTorrents.Checked );
                 printFiles();
-                btnDownload.Tag = "1";
-                btnDownload.Text = "Загрузить";
+                changeDownloadButtonTag( "1" );
             }
             else if ( btnDownload.Tag.ToString() == "1" )
             {
                 if ( !rbTorrents.Checked )
                 {
-                    eu.downloadFile( @"C:\tmpExUa" );
+                    eu.downloadFile();
                 }
-                /*btnDownload.Tag = "0";
-                btnDownload.Text = "Получить список файлов";*/
+                else
+                {
+                    eu.downloadTorrents();
+                }
             }
         }
 
@@ -59,6 +79,33 @@ namespace ExUa_Torrents
             int index = e.Item.Index;
             long arrIndex = this.files[ index ].arrIndex;
             eu.checkFile( arrIndex, check );
+        }
+
+        private void tbLink_TextChanged( object sender, EventArgs e )
+        {
+            changeDownloadButtonTag( "0" );
+        }
+
+        private void lvFiles_ColumnClick( object sender, ColumnClickEventArgs e )
+        {
+            if ( e.Column == 0 )
+            {
+                bool check = !lvFiles.Items[ 0 ].Checked;
+                for ( int i = 0; i < lvFiles.Items.Count; i++ )
+                {
+                    lvFiles.Items[ i ].Checked = check;
+                }
+            }
+        }
+
+        private void rbTorrents_CheckedChanged( object sender, EventArgs e )
+        {
+            changeDownloadButtonTag( "0" );
+        }
+
+        private void rbAll_CheckedChanged( object sender, EventArgs e )
+        {
+            changeDownloadButtonTag( "0" );
         }
     }
 }

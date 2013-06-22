@@ -6,6 +6,11 @@ using System.Text.RegularExpressions;
 using RestSharp;
 using ExtensionMethods;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace ExUa_Torrents
 {
@@ -29,10 +34,22 @@ namespace ExUa_Torrents
         const string fileId = @"<a\shref='/load/([0-9]+)'\srel='nofollow'>";
 
         List<ExUaFile> files;
+        bool downloading = false;
+        bool clearFolder = false;
+        string tmpFolderPath;
+        string torrentClient = "BitTorrent";
+        string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent";
+        string torrentSavePath;
 
-        public ExUa()
+        public ExUa( string tmpFolderPath, string torrentClient, string torrentClientPath,
+            string torrentSavePath, bool clearFolder )
         {
             this.files = new List<ExUaFile>();
+            this.tmpFolderPath = tmpFolderPath;
+            this.torrentClient = torrentClient;
+            this.torrentClientPath = torrentClientPath;
+            this.torrentSavePath = torrentSavePath;
+            this.clearFolder = clearFolder;
         }
 
         public long cleanSize( string size )
@@ -43,6 +60,27 @@ namespace ExUa_Torrents
             return result;
         }
 
+        public void downloadComplete( object sender, AsyncCompletedEventArgs e )
+        {
+            this.downloading = false;
+        }
+
+        public void downloadFile( string link, string fileName )
+        {
+            downloading = true;
+            using ( WebClient webClient = new WebClient() )
+            {
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler( downloadComplete );
+                webClient.DownloadFileAsync( new Uri( @"http://www.ex.ua" + link ), fileName );
+                while ( downloading )
+                {
+                    Application.DoEvents();
+                    Thread.Sleep( 100 );
+                }
+            }
+        }
+
+        #region getInfo
         public string getUrl( string url )
         {
             RestClient client = new RestClient( url );
@@ -110,6 +148,7 @@ namespace ExUa_Torrents
             }
             return result;
         }
+        #endregion
 
         public void getFiles( string url )
         {
@@ -160,7 +199,7 @@ namespace ExUa_Torrents
             this.files[ (int)arrIndex ].check = check;
         }
 
-        public void downloadFile( string tmpFolderPath )
+        public void downloadFile()
         {
             List<string> downFiles = new List<string>();
             for ( int i = 0; i < this.files.Count; i++ )
@@ -175,6 +214,30 @@ namespace ExUa_Torrents
                 string fileName = tmpFolderPath + @"\tmp.urls";
                 downFiles.SaveToFile( fileName );
                 Process.Start( fileName );
+            }
+        }
+
+        public void injectTorrent( string file, string savePath )
+        {
+            string arguments = string.Empty;
+            if ( torrentClient == "BitTorrent" )
+            {
+                arguments = @"/DIRECTORY ""{0}"" ""{1}""".f( savePath, file );
+            }
+            Process.Start( torrentClientPath, arguments );
+        }
+
+        public void downloadTorrents()
+        {
+            for ( int i = 0; i < this.files.Count; i++ )
+            {
+                if ( this.files[ i ].check )
+                {
+                    string torrentUrl = this.files[ i ].torrentUrl;
+                    string fileName = tmpFolderPath + @"\" + this.files[ i ].name + ".torrent";
+                    downloadFile( torrentUrl, fileName );
+                    injectTorrent( fileName, torrentSavePath );
+                }
             }
         }
     }

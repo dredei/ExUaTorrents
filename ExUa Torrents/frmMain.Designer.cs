@@ -60,7 +60,8 @@
             this.tbLink.Name = "tbLink";
             this.tbLink.Size = new System.Drawing.Size(269, 20);
             this.tbLink.TabIndex = 1;
-            this.tbLink.Text = "http://www.ex.ua/view/546609";
+            this.tbLink.Text = "http://www.ex.ua/view/8175702";
+            this.tbLink.TextChanged += new System.EventHandler(this.tbLink_TextChanged);
             // 
             // lvFiles
             // 
@@ -76,6 +77,7 @@
             this.lvFiles.TabIndex = 2;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
+            this.lvFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvFiles_ColumnClick);
             this.lvFiles.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.lvFiles_ItemChecked);
             // 
             // columnHeader1
@@ -114,6 +116,7 @@
             this.rbTorrents.TabIndex = 4;
             this.rbTorrents.Text = "Отображать торренты";
             this.rbTorrents.UseVisualStyleBackColor = true;
+            this.rbTorrents.CheckedChanged += new System.EventHandler(this.rbTorrents_CheckedChanged);
             // 
             // rbAll
             // 
@@ -127,6 +130,7 @@
             this.rbAll.TabStop = true;
             this.rbAll.Text = "Отображать все";
             this.rbAll.UseVisualStyleBackColor = true;
+            this.rbAll.CheckedChanged += new System.EventHandler(this.rbAll_CheckedChanged);
             // 
             // btnDownload
             // 
