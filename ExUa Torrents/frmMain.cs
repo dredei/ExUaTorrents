@@ -172,5 +172,23 @@ namespace ExUa_Torrents
                 eu.clearTmpFolder();
             }
         }
+
+        private void tmpCheckClipbrd_Tick( object sender, EventArgs e )
+        {
+            string text = Clipboard.GetText();
+            if ( text.IndexOf( "ex.ua/view/" ) >= 0 && tbLink.Text != text && !tbLink.Focused )
+            {
+                tbLink.Text = text;
+                tbLink.SelectionStart = tbLink.TextLength;
+            }
+        }
+
+        private void tbLink_KeyDown( object sender, KeyEventArgs e )
+        {
+            if ( e.KeyCode == Keys.Enter && btnDownload.Tag.ToString() == "0" )
+            {
+                btnDownload.PerformClick();
+            }
+        }
     }
 }

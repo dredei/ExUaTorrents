@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.label1 = new System.Windows.Forms.Label();
             this.tbLink = new System.Windows.Forms.TextBox();
@@ -44,6 +45,7 @@
             this.btnSelDir = new System.Windows.Forms.Button();
             this.cbTorrentSavePath = new System.Windows.Forms.ComboBox();
             this.fbd1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.tmpCheckClipbrd = new System.Windows.Forms.Timer(this.components);
             this.ssStatus.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +66,7 @@
             this.tbLink.TabIndex = 1;
             this.tbLink.Text = "http://www.ex.ua/view/8175702";
             this.tbLink.TextChanged += new System.EventHandler(this.tbLink_TextChanged);
+            this.tbLink.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbLink_KeyDown);
             // 
             // lvFiles
             // 
@@ -187,6 +190,12 @@
             this.cbTorrentSavePath.Size = new System.Drawing.Size(232, 21);
             this.cbTorrentSavePath.TabIndex = 11;
             // 
+            // tmpCheckClipbrd
+            // 
+            this.tmpCheckClipbrd.Enabled = true;
+            this.tmpCheckClipbrd.Interval = 1000;
+            this.tmpCheckClipbrd.Tick += new System.EventHandler(this.tmpCheckClipbrd_Tick);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,6 +245,7 @@
         private System.Windows.Forms.Button btnSelDir;
         private System.Windows.Forms.ComboBox cbTorrentSavePath;
         private System.Windows.Forms.FolderBrowserDialog fbd1;
+        private System.Windows.Forms.Timer tmpCheckClipbrd;
     }
 }
 
