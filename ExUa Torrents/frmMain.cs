@@ -15,5 +15,12 @@ namespace ExUa_Torrents
         {
             InitializeComponent();
         }
+
+        private void btnDownload_Click( object sender, EventArgs e )
+        {
+            ExUa eu = new ExUa();
+            eu.getFiles( tbLink.Text );
+
+        }
     }
 }

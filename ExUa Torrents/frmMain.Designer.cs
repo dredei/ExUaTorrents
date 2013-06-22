@@ -58,6 +58,7 @@
             this.tbLink.Name = "tbLink";
             this.tbLink.Size = new System.Drawing.Size(269, 20);
             this.tbLink.TabIndex = 1;
+            this.tbLink.Text = "http://www.ex.ua/view/546609";
             // 
             // lvFiles
             // 
@@ -108,18 +109,20 @@
             // rbTorrents
             // 
             this.rbTorrents.AutoSize = true;
-            this.rbTorrents.Location = new System.Drawing.Point(3, 221);
+            this.rbTorrents.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rbTorrents.Location = new System.Drawing.Point(134, 221);
             this.rbTorrents.Name = "rbTorrents";
             this.rbTorrents.Size = new System.Drawing.Size(138, 17);
             this.rbTorrents.TabIndex = 4;
-            this.rbTorrents.TabStop = true;
             this.rbTorrents.Text = "Отображать торренты";
             this.rbTorrents.UseVisualStyleBackColor = true;
             // 
             // rbAll
             // 
             this.rbAll.AutoSize = true;
-            this.rbAll.Location = new System.Drawing.Point(164, 221);
+            this.rbAll.Checked = true;
+            this.rbAll.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rbAll.Location = new System.Drawing.Point(3, 221);
             this.rbAll.Name = "rbAll";
             this.rbAll.Size = new System.Drawing.Size(108, 17);
             this.rbAll.TabIndex = 5;
@@ -129,15 +132,18 @@
             // 
             // btnDownload
             // 
+            this.btnDownload.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnDownload.Location = new System.Drawing.Point(3, 244);
             this.btnDownload.Name = "btnDownload";
             this.btnDownload.Size = new System.Drawing.Size(269, 23);
             this.btnDownload.TabIndex = 6;
-            this.btnDownload.Text = "Скачать";
+            this.btnDownload.Text = "Загрузить";
             this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
             // btnSettings
             // 
+            this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSettings.Location = new System.Drawing.Point(3, 273);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(269, 23);
