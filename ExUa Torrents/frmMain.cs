@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ExtensionMethods;
 using Ini;
+using Donate;
+using System.Diagnostics;
 
 namespace ExUa_Torrents
 {
@@ -24,6 +27,15 @@ namespace ExUa_Torrents
         public frmMain()
         {
             InitializeComponent();
+        }
+
+        private void checkDonateDll()
+        {
+            if ( !File.Exists( Application.StartupPath + @"\Donate.dll" ) )
+            {
+                MessageBox.Show( "Верните Donate.dll!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                Application.Exit();
+            }
         }
 
         public void loadSettings()
@@ -144,6 +156,8 @@ namespace ExUa_Torrents
             System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
             loadSettings();
             cbTorrentSavePath.SelectedIndex = 0;
+            frmDonate frm = new frmDonate();
+            frm.ShowDialog();
         }
 
         private void btnSettings_Click( object sender, EventArgs e )
@@ -189,6 +203,17 @@ namespace ExUa_Torrents
             {
                 btnDownload.PerformClick();
             }
+        }
+
+        private void llSite_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            Process.Start( @"http://softez.pp.ua/" );
+        }
+
+        private void llDonate_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            frmDonate frm = new frmDonate( true );
+            frm.ShowDialog();
         }
     }
 }

@@ -46,6 +46,8 @@
             this.cbTorrentSavePath = new System.Windows.Forms.ComboBox();
             this.fbd1 = new System.Windows.Forms.FolderBrowserDialog();
             this.tmpCheckClipbrd = new System.Windows.Forms.Timer(this.components);
+            this.llSite = new System.Windows.Forms.LinkLabel();
+            this.llDonate = new System.Windows.Forms.LinkLabel();
             this.ssStatus.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -98,7 +100,7 @@
             // 
             this.ssStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.ssStatus.Location = new System.Drawing.Point(0, 338);
+            this.ssStatus.Location = new System.Drawing.Point(0, 356);
             this.ssStatus.Name = "ssStatus";
             this.ssStatus.Size = new System.Drawing.Size(275, 22);
             this.ssStatus.SizingGrip = false;
@@ -196,12 +198,38 @@
             this.tmpCheckClipbrd.Interval = 1000;
             this.tmpCheckClipbrd.Tick += new System.EventHandler(this.tmpCheckClipbrd_Tick);
             // 
+            // llSite
+            // 
+            this.llSite.AutoSize = true;
+            this.llSite.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.llSite.Location = new System.Drawing.Point(237, 339);
+            this.llSite.Name = "llSite";
+            this.llSite.Size = new System.Drawing.Size(35, 13);
+            this.llSite.TabIndex = 12;
+            this.llSite.TabStop = true;
+            this.llSite.Text = "Сайт";
+            this.llSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llSite_LinkClicked);
+            // 
+            // llDonate
+            // 
+            this.llDonate.AutoSize = true;
+            this.llDonate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.llDonate.Location = new System.Drawing.Point(0, 339);
+            this.llDonate.Name = "llDonate";
+            this.llDonate.Size = new System.Drawing.Size(48, 13);
+            this.llDonate.TabIndex = 13;
+            this.llDonate.TabStop = true;
+            this.llDonate.Text = "Donate";
+            this.llDonate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llDonate_LinkClicked);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(275, 360);
+            this.ClientSize = new System.Drawing.Size(275, 378);
+            this.Controls.Add(this.llDonate);
+            this.Controls.Add(this.llSite);
             this.Controls.Add(this.cbTorrentSavePath);
             this.Controls.Add(this.btnSelDir);
             this.Controls.Add(this.label2);
@@ -246,6 +274,8 @@
         private System.Windows.Forms.ComboBox cbTorrentSavePath;
         private System.Windows.Forms.FolderBrowserDialog fbd1;
         private System.Windows.Forms.Timer tmpCheckClipbrd;
+        private System.Windows.Forms.LinkLabel llSite;
+        private System.Windows.Forms.LinkLabel llDonate;
     }
 }
 

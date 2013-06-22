@@ -35,6 +35,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Donate">
+      <HintPath>..\..\Donate\Donate\bin\Release\Donate.dll</HintPath>
+    </Reference>
     <Reference Include="ExtensionMethods, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExtensionMethods\ExtensionMethods\bin\Release\ExtensionMethods.dll</HintPath>
