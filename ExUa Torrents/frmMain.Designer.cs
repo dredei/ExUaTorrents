@@ -89,11 +89,12 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Название файла";
-            this.columnHeader1.Width = 185;
+            this.columnHeader1.Width = 174;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Размер";
+            this.columnHeader2.Width = 71;
             // 
             // ssStatus
             // 

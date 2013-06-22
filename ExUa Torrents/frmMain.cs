@@ -56,7 +56,7 @@ namespace ExUa_Torrents
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = files[ i ].name;
-                lvi.SubItems.Add( AddMethods.hSize( files[ i ].size ) );
+                lvi.SubItems.Add( ExMethods.getSizeReadable( files[ i ].size ) );
                 lvFiles.Items.Add( lvi );
             }
         }

@@ -198,7 +198,7 @@ namespace ExUa_Torrents
 
         public void clearTmpFolder()
         {
-            if ( clearTempFolder )
+            if ( clearTempFolder && Directory.Exists( tmpFolderPath ) )
             {
                 foreach ( string file in System.IO.Directory.GetFiles( tmpFolderPath ) )
                 {
