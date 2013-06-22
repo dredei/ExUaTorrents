@@ -14,11 +14,9 @@ namespace ExUa_Torrents
     {
         List<ExUaFile> files;
         ExUa eu = null;
-        string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
-        string tmpFolderPath = "C:\\tmpExUa";
-        string torrentClient = "BitTorrent";
-        string torrentSavePath = "C:\\tmpSave";
-        bool clearFolder = false;
+        public string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
+        public string tmpFolderPath = "C:\\tmpExUa";
+        public bool clearTempFolder = false;
 
         public frmMain()
         {
@@ -54,7 +52,8 @@ namespace ExUa_Torrents
         {
             if ( btnDownload.Tag.ToString() == "0" )
             {
-                eu = new ExUa( tmpFolderPath, torrentClient, torrentClientPath, torrentSavePath, clearFolder );
+                string torrentSavePath = cbTorrentSavePath.Text;
+                eu = new ExUa( tmpFolderPath, torrentClientPath, torrentSavePath, clearTempFolder );
                 eu.getFiles( tbLink.Text );
                 files = eu.getLocalFiles( rbTorrents.Checked );
                 printFiles();
@@ -106,6 +105,17 @@ namespace ExUa_Torrents
         private void rbAll_CheckedChanged( object sender, EventArgs e )
         {
             changeDownloadButtonTag( "0" );
+        }
+
+        private void frmMain_Load( object sender, EventArgs e )
+        {
+            cbTorrentSavePath.SelectedIndex = 0;
+        }
+
+        private void btnSettings_Click( object sender, EventArgs e )
+        {
+            frmSettings frm = new frmSettings( this );
+            frm.ShowDialog();
         }
     }
 }

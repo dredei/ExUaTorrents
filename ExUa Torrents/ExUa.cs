@@ -35,21 +35,19 @@ namespace ExUa_Torrents
 
         List<ExUaFile> files;
         bool downloading = false;
-        bool clearFolder = false;
+        bool clearTempFolder = false;
         string tmpFolderPath;
-        string torrentClient = "BitTorrent";
-        string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent";
+        string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
         string torrentSavePath;
 
-        public ExUa( string tmpFolderPath, string torrentClient, string torrentClientPath,
-            string torrentSavePath, bool clearFolder )
+        public ExUa( string tmpFolderPath, string torrentClientPath, string torrentSavePath,
+            bool clearTempFolder )
         {
             this.files = new List<ExUaFile>();
             this.tmpFolderPath = tmpFolderPath;
-            this.torrentClient = torrentClient;
             this.torrentClientPath = torrentClientPath;
             this.torrentSavePath = torrentSavePath;
-            this.clearFolder = clearFolder;
+            this.clearTempFolder = clearTempFolder;
         }
 
         public long cleanSize( string size )
@@ -58,6 +56,11 @@ namespace ExUa_Torrents
             size = size.Replace( ",", "" );
             result = long.Parse( size );
             return result;
+        }
+
+        public string getTorrentClientByPath(string path)
+        {
+            return Path.GetFileNameWithoutExtension( path );
         }
 
         public void downloadComplete( object sender, AsyncCompletedEventArgs e )
@@ -220,9 +223,14 @@ namespace ExUa_Torrents
         public void injectTorrent( string file, string savePath )
         {
             string arguments = string.Empty;
-            if ( torrentClient == "BitTorrent" )
+            string torrentClient = getTorrentClientByPath( torrentClientPath );
+            if ( torrentClient == "BitTorrent" || torrentClient == "uTorrent" )
             {
                 arguments = @"/DIRECTORY ""{0}"" ""{1}""".f( savePath, file );
+            }
+            else if ( torrentClient == "BitComet" )
+            {
+                arguments = @"/DIRECTORY ""{0}"" - o ""{1}"" - s".f( file, savePath );
             }
             Process.Start( torrentClientPath, arguments );
         }

@@ -41,7 +41,7 @@
             this.btnSettings = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.btnSelDir = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cbTorrentSavePath = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -153,6 +153,7 @@
             this.btnSettings.TabIndex = 7;
             this.btnSettings.Text = "Настройки";
             this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // label2
             // 
@@ -173,13 +174,15 @@
             this.btnSelDir.Text = "...";
             this.btnSelDir.UseVisualStyleBackColor = true;
             // 
-            // comboBox1
+            // cbTorrentSavePath
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(3, 257);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(232, 21);
-            this.comboBox1.TabIndex = 11;
+            this.cbTorrentSavePath.FormattingEnabled = true;
+            this.cbTorrentSavePath.Items.AddRange(new object[] {
+            "C:\\tmpSave"});
+            this.cbTorrentSavePath.Location = new System.Drawing.Point(3, 257);
+            this.cbTorrentSavePath.Name = "cbTorrentSavePath";
+            this.cbTorrentSavePath.Size = new System.Drawing.Size(232, 21);
+            this.cbTorrentSavePath.TabIndex = 11;
             // 
             // frmMain
             // 
@@ -187,7 +190,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(275, 360);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cbTorrentSavePath);
             this.Controls.Add(this.btnSelDir);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnSettings);
@@ -203,6 +206,7 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ExUa Torrents";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -225,7 +229,7 @@
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSelDir;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cbTorrentSavePath;
     }
 }
 
