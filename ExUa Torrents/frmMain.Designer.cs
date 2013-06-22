@@ -33,13 +33,15 @@
             this.lvFiles = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.rbTorrents = new System.Windows.Forms.RadioButton();
             this.rbAll = new System.Windows.Forms.RadioButton();
             this.btnDownload = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnSelDir = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,8 +67,8 @@
             this.lvFiles.CheckBoxes = true;
             this.lvFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3});
+            this.columnHeader2});
+            this.lvFiles.FullRowSelect = true;
             this.lvFiles.Location = new System.Drawing.Point(3, 42);
             this.lvFiles.MultiSelect = false;
             this.lvFiles.Name = "lvFiles";
@@ -74,26 +76,22 @@
             this.lvFiles.TabIndex = 2;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
+            this.lvFiles.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.lvFiles_ItemChecked);
             // 
             // columnHeader1
             // 
             this.columnHeader1.Text = "Название файла";
-            this.columnHeader1.Width = 190;
+            this.columnHeader1.Width = 185;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Размер";
             // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Ссылка";
-            this.columnHeader3.Width = 0;
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 299);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 338);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(275, 22);
             this.statusStrip1.SizingGrip = false;
@@ -133,31 +131,61 @@
             // btnDownload
             // 
             this.btnDownload.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnDownload.Location = new System.Drawing.Point(3, 244);
+            this.btnDownload.Location = new System.Drawing.Point(3, 284);
             this.btnDownload.Name = "btnDownload";
             this.btnDownload.Size = new System.Drawing.Size(269, 23);
             this.btnDownload.TabIndex = 6;
-            this.btnDownload.Text = "Загрузить";
+            this.btnDownload.Tag = "0";
+            this.btnDownload.Text = "Получить список файлов";
             this.btnDownload.UseVisualStyleBackColor = true;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
             // btnSettings
             // 
             this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSettings.Location = new System.Drawing.Point(3, 273);
+            this.btnSettings.Location = new System.Drawing.Point(3, 313);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(269, 23);
             this.btnSettings.TabIndex = 7;
             this.btnSettings.Text = "Настройки";
             this.btnSettings.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(0, 241);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(238, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Куда будет сохранять файлы торрент-клиент:";
+            // 
+            // btnSelDir
+            // 
+            this.btnSelDir.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSelDir.Location = new System.Drawing.Point(241, 255);
+            this.btnSelDir.Name = "btnSelDir";
+            this.btnSelDir.Size = new System.Drawing.Size(31, 23);
+            this.btnSelDir.TabIndex = 10;
+            this.btnSelDir.Text = "...";
+            this.btnSelDir.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(3, 257);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(232, 21);
+            this.comboBox1.TabIndex = 11;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(275, 321);
+            this.ClientSize = new System.Drawing.Size(275, 360);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.btnSelDir);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.rbAll);
@@ -185,13 +213,15 @@
         private System.Windows.Forms.ListView lvFiles;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.RadioButton rbTorrents;
         private System.Windows.Forms.RadioButton rbAll;
         private System.Windows.Forms.Button btnDownload;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnSelDir;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

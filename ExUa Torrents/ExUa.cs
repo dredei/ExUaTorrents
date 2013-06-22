@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using RestSharp;
+using ExtensionMethods;
+using System.Diagnostics;
 
 namespace ExUa_Torrents
 {
@@ -14,7 +16,8 @@ namespace ExUa_Torrents
         public string torrentUrl = string.Empty;
         public long size = 0;
         public long fileId = -1;
-        public long arrId = -1;
+        public long arrIndex = -1;
+        public bool check = false;
     }
 
     public class ExUa
@@ -123,12 +126,55 @@ namespace ExUa_Torrents
                 exFile.size = filesSize[ i ];
                 exFile.url = filesLoadLink[ i ];
                 exFile.fileId = filesId[ i ];
-                exFile.arrId = i;
+                exFile.arrIndex = i;
                 if ( filesLoadTorrentLink.ContainsKey( exFile.fileId.ToString() ) )
                 {
                     exFile.torrentUrl = filesLoadTorrentLink[ exFile.fileId.ToString() ];
                 }
                 this.files.Add( exFile );
+            }
+        }
+
+        public List<ExUaFile> getLocalFiles( bool torrent )
+        {
+            List<ExUaFile> result = new List<ExUaFile>();
+            for ( int i = 0; i < this.files.Count; i++ )
+            {
+                if ( torrent )
+                {
+                    if ( !string.IsNullOrEmpty( this.files[ i ].torrentUrl ) )
+                    {
+                        result.Add( this.files[ i ] );
+                    }
+                }
+                else
+                {
+                    result.Add( this.files[ i ] );
+                }
+            }
+            return result;
+        }
+
+        public void checkFile( long arrIndex, bool check )
+        {
+            this.files[ (int)arrIndex ].check = check;
+        }
+
+        public void downloadFile( string tmpFolderPath )
+        {
+            List<string> downFiles = new List<string>();
+            for ( int i = 0; i < this.files.Count; i++ )
+            {
+                if ( this.files[ i ].check )
+                {
+                    downFiles.Add( "http://www.ex.ua" + this.files[ i ].url );
+                }
+            }
+            if ( downFiles.Count > 0 )
+            {
+                string fileName = tmpFolderPath + @"\tmp.urls";
+                downFiles.SaveToFile( fileName );
+                Process.Start( fileName );
             }
         }
     }
