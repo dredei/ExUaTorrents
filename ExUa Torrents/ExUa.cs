@@ -198,6 +198,22 @@ namespace ExUa_Torrents
             this.files[ (int)arrIndex ].check = check;
         }
 
+        public void clearTmpFolder()
+        {
+            if ( clearTempFolder )
+            {
+                foreach ( string file in System.IO.Directory.GetFiles( tmpFolderPath ) )
+                {
+                    System.IO.File.Delete( file );
+                }
+                foreach ( string subDirectory in System.IO.Directory.GetDirectories( tmpFolderPath ) )
+                {
+                    System.IO.Directory.Delete( subDirectory, true );
+
+                }
+            }
+        }
+
         public void downloadFile()
         {
             List<string> downFiles = new List<string>();

@@ -167,6 +167,10 @@ namespace ExUa_Torrents
             {
                 thr.Abort();
             }
+            if ( eu != null )
+            {
+                eu.clearTmpFolder();
+            }
         }
     }
 }

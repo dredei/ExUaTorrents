@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSettings));
             this.cbClearTempFolder = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbTorrentClientPath = new System.Windows.Forms.TextBox();
@@ -45,17 +46,17 @@
             // 
             this.cbClearTempFolder.AutoSize = true;
             this.cbClearTempFolder.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cbClearTempFolder.Location = new System.Drawing.Point(3, 0);
+            this.cbClearTempFolder.Location = new System.Drawing.Point(3, 1);
             this.cbClearTempFolder.Name = "cbClearTempFolder";
-            this.cbClearTempFolder.Size = new System.Drawing.Size(163, 17);
+            this.cbClearTempFolder.Size = new System.Drawing.Size(224, 17);
             this.cbClearTempFolder.TabIndex = 0;
-            this.cbClearTempFolder.Text = "Очищать временную папку";
+            this.cbClearTempFolder.Text = "Очищать временную папку при выходе";
             this.cbClearTempFolder.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 20);
+            this.label1.Location = new System.Drawing.Point(0, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(129, 13);
             this.label1.TabIndex = 1;
@@ -63,7 +64,7 @@
             // 
             // tbTorrentClientPath
             // 
-            this.tbTorrentClientPath.Location = new System.Drawing.Point(3, 36);
+            this.tbTorrentClientPath.Location = new System.Drawing.Point(3, 37);
             this.tbTorrentClientPath.Name = "tbTorrentClientPath";
             this.tbTorrentClientPath.Size = new System.Drawing.Size(247, 20);
             this.tbTorrentClientPath.TabIndex = 2;
@@ -72,7 +73,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 59);
+            this.label2.Location = new System.Drawing.Point(0, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(164, 13);
             this.label2.TabIndex = 3;
@@ -80,7 +81,7 @@
             // 
             // tbTmpFolder
             // 
-            this.tbTmpFolder.Location = new System.Drawing.Point(3, 75);
+            this.tbTmpFolder.Location = new System.Drawing.Point(3, 76);
             this.tbTmpFolder.Name = "tbTmpFolder";
             this.tbTmpFolder.Size = new System.Drawing.Size(247, 20);
             this.tbTmpFolder.TabIndex = 4;
@@ -89,7 +90,7 @@
             // btnSelectTorrentPath
             // 
             this.btnSelectTorrentPath.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSelectTorrentPath.Location = new System.Drawing.Point(256, 34);
+            this.btnSelectTorrentPath.Location = new System.Drawing.Point(256, 35);
             this.btnSelectTorrentPath.Name = "btnSelectTorrentPath";
             this.btnSelectTorrentPath.Size = new System.Drawing.Size(30, 23);
             this.btnSelectTorrentPath.TabIndex = 5;
@@ -100,7 +101,7 @@
             // btnSelectTempFolder
             // 
             this.btnSelectTempFolder.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSelectTempFolder.Location = new System.Drawing.Point(256, 73);
+            this.btnSelectTempFolder.Location = new System.Drawing.Point(256, 74);
             this.btnSelectTempFolder.Name = "btnSelectTempFolder";
             this.btnSelectTempFolder.Size = new System.Drawing.Size(30, 23);
             this.btnSelectTempFolder.TabIndex = 6;
@@ -111,7 +112,7 @@
             // btnOk
             // 
             this.btnOk.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnOk.Location = new System.Drawing.Point(3, 101);
+            this.btnOk.Location = new System.Drawing.Point(3, 102);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(135, 23);
             this.btnOk.TabIndex = 7;
@@ -122,7 +123,7 @@
             // btnCancel
             // 
             this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancel.Location = new System.Drawing.Point(151, 101);
+            this.btnCancel.Location = new System.Drawing.Point(151, 102);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(135, 23);
             this.btnCancel.TabIndex = 8;
@@ -141,7 +142,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(288, 125);
+            this.ClientSize = new System.Drawing.Size(288, 126);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnSelectTempFolder);
@@ -151,6 +152,8 @@
             this.Controls.Add(this.tbTorrentClientPath);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbClearTempFolder);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmSettings";
