@@ -185,8 +185,6 @@
             // cbTorrentSavePath
             // 
             this.cbTorrentSavePath.FormattingEnabled = true;
-            this.cbTorrentSavePath.Items.AddRange(new object[] {
-            "C:\\tmpSave"});
             this.cbTorrentSavePath.Location = new System.Drawing.Point(3, 257);
             this.cbTorrentSavePath.Name = "cbTorrentSavePath";
             this.cbTorrentSavePath.Size = new System.Drawing.Size(232, 21);
