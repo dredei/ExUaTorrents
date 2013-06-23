@@ -35,15 +35,17 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Donate">
+    <Reference Include="Donate, Version=1.0.1.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Donate\Donate\bin\Release\Donate.dll</HintPath>
     </Reference>
     <Reference Include="ExtensionMethods, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExtensionMethods\ExtensionMethods\bin\Release\ExtensionMethods.dll</HintPath>
+      <HintPath>..\..\ExtensionMethods\ExtensionMethods\bin\Release\ExtensionMethods.dll</HintPath>
     </Reference>
-    <Reference Include="IniFile">
-      <HintPath>..\IniFiles\IniFile\bin\Release\IniFile.dll</HintPath>
+    <Reference Include="IniFile, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\IniFile\IniFile\bin\Release\IniFile.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
