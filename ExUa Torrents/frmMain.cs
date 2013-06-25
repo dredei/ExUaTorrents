@@ -52,7 +52,7 @@ namespace ExUa_Torrents
 
         private void getPaths()
         {
-            cbTorrentSavePath.Items.Clear();            
+            cbTorrentSavePath.Items.Clear();
             cbTorrentSavePath.Items.AddRange( this.history.getPaths() );
             if ( cbTorrentSavePath.Items.Count > 0 )
             {
@@ -190,7 +190,7 @@ namespace ExUa_Torrents
         {
             fbd1.SelectedPath = cbTorrentSavePath.Text;
             if ( fbd1.ShowDialog() == DialogResult.OK )
-            {                
+            {
                 history.addPath( fbd1.SelectedPath );
                 this.getPaths();
                 cbTorrentSavePath.Text = fbd1.SelectedPath;
@@ -213,7 +213,7 @@ namespace ExUa_Torrents
         private void tmpCheckClipbrd_Tick( object sender, EventArgs e )
         {
             string text = Clipboard.GetText();
-            if ( text.IndexOf( "ex.ua/view/" ) >= 0 && tbLink.Text != text && !tbLink.Focused )
+            if ( ( text.IndexOf( "ex.ua/view/" ) >= 0 && tbLink.Text != text && !tbLink.Focused ) || ( string.IsNullOrEmpty( tbLink.Text ) && text.IndexOf( "ex.ua/view/" ) >= 0 ) )
             {
                 tbLink.Text = text;
                 tbLink.SelectionStart = tbLink.TextLength;
