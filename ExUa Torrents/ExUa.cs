@@ -270,5 +270,10 @@ namespace ExUa_Torrents
                 updEvent( this, args );
             }
         }
+
+        public long getFileSize( int index )
+        {
+            return this.files[ index ].size;
+        }
     }
 }

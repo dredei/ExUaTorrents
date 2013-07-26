@@ -19,6 +19,7 @@ namespace ExUa_Torrents
         public string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
         public string tmpFolderPath = "C:\\tmpExUa";
         public bool clearTempFolder = false;
+        public long selectedSize = 0;
 
         public frmMain()
         {
@@ -94,7 +95,7 @@ namespace ExUa_Torrents
         {
             if ( btnDownload.Tag.ToString() == "0" )
             {
-                if ( string.IsNullOrEmpty( tbLink.Text ) || tbLink.Text.IndexOf( "ex.ua/view/" ) < 0 )
+                if ( string.IsNullOrEmpty( tbLink.Text ) || tbLink.Text.IndexOf( "ex.ua/" ) < 0 )
                 {
                     MessageBox.Show( "Укажите корректную ссылку!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
                     return;
@@ -141,6 +142,19 @@ namespace ExUa_Torrents
             int index = e.Item.Index;
             long arrIndex = this.files[ index ].arrIndex;
             eu.checkFile( arrIndex, check );
+            if ( check )
+            {
+                this.selectedSize += eu.getFileSize( index );
+            }
+            else
+            {
+                this.selectedSize -= eu.getFileSize( index );
+            }
+            if ( this.selectedSize < 0 )
+            {
+                this.selectedSize = 0;
+            }
+            ssStatus.Items[ 0 ].Text = "Размер: " + ExMethods.getSizeReadable( this.selectedSize );
         }
 
         private void tbLink_TextChanged( object sender, EventArgs e )
@@ -213,7 +227,8 @@ namespace ExUa_Torrents
         private void tmpCheckClipbrd_Tick( object sender, EventArgs e )
         {
             string text = Clipboard.GetText();
-            if ( ( text.IndexOf( "ex.ua/view/" ) >= 0 && tbLink.Text != text && !tbLink.Focused ) || ( string.IsNullOrEmpty( tbLink.Text ) && text.IndexOf( "ex.ua/view/" ) >= 0 ) )
+            if ( ( text.IndexOf( "ex.ua/" ) >= 0 && tbLink.Text != text && !tbLink.Focused )
+                || ( string.IsNullOrEmpty( tbLink.Text ) && text.IndexOf( "ex.ua/view/" ) >= 0 ) )
             {
                 tbLink.Text = text;
                 tbLink.SelectionStart = tbLink.TextLength;
