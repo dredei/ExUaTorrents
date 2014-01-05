@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{A1B86A6C-07E4-4CE2-AD35-EEF6440FC6CC}
 AppName=ExUaTorrents
-AppVersion=2.0.0
+AppVersion=2.1.0
 ;AppVerName=Pages Searcher 1.0
 AppPublisherURL=http://www.softez.pp.ua/
 AppSupportURL=http://www.softez.pp.ua/
@@ -18,9 +18,9 @@ AllowNoIcons=yes
 LicenseFile=D:\Progs\license_freeware.txt
 OutputDir=bin\
 OutputBaseFilename=exuatorrents_install
-Compression=lzma/ultra64
+Compression=lzma2/ultra64
 SolidCompression=true
-InternalCompressLevel=ultra64
+InternalCompressLevel=ultra
 
 [Languages]
 Name: russian; MessagesFile: compiler:Languages\Russian.isl
@@ -44,8 +44,8 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\ExUa Torrents; File
 
 [Run]
 Filename: {app}\ExUa Torrents.exe; Description: {cm:LaunchProgram,ExUaTorrents}; Flags: nowait postinstall skipifsilent
-Filename: "http://softez.pp.ua/"; Flags: shellexec
+Filename: "http://www.softez.pp.ua/"; Flags: shellexec
 
 [Messages]
-BeveledLabel=dredei (ICQ: 1324484), http://softez.pp.ua/
+BeveledLabel=dredei, http://www.softez.pp.ua/
 
