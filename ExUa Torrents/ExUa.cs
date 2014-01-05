@@ -80,7 +80,11 @@ namespace ExUa_Torrents
         #region getInfo
         public string getUrl( string url )
         {
+            var cookieJar = new CookieContainer();
             RestClient client = new RestClient( url );
+            client.Proxy = new WebProxy();
+            client.CookieContainer = cookieJar;
+            client.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0";
             RestRequest request = new RestRequest( Method.GET );
             IRestResponse response = client.Execute( request );
             return response.Content;
