@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "ExUa Torrents" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "dredei, http://softez.pp.ua/" )]
+[assembly: AssemblyCompany( "dredei, http://www.softez.pp.ua/" )]
 [assembly: AssemblyProduct( "ExUa Torrents" )]
-[assembly: AssemblyCopyright( "dredei, http://softez.pp.ua/ © 2013" )]
+[assembly: AssemblyCopyright( "dredei, http://www.softez.pp.ua/ © 2014" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "2.0.0.0" )]
-[assembly: AssemblyFileVersion( "2.0.0.0" )]
+[assembly: AssemblyVersion( "2.1.0.0" )]
+[assembly: AssemblyFileVersion( "2.1.0.0" )]

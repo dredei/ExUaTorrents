@@ -1,14 +1,13 @@
-﻿
-namespace ExUa_Torrents
+﻿namespace ExUa_Torrents
 {
     public class ExUaFile
     {
-        public string name = string.Empty;
-        public string url = string.Empty;
-        public string torrentUrl = string.Empty;
-        public long size = 0;
-        public long fileId = -1;
-        public long arrIndex = -1;
-        public bool check = false;
+        public string Name = string.Empty;
+        public string Url = string.Empty;
+        public string TorrentUrl = string.Empty;
+        public long Size;
+        public long FileId = -1;
+        public long ArrIndex = -1;
+        public bool Check;
     }
 }

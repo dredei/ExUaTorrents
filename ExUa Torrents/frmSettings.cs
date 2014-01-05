@@ -1,30 +1,34 @@
-﻿using System;
+﻿#region Using
+
+using System;
 using System.Windows.Forms;
+
+#endregion
 
 namespace ExUa_Torrents
 {
-    public partial class frmSettings : Form
+    public partial class FrmSettings : Form
     {
-        frmMain MainForm;
+        private readonly FrmMain _mainForm;
 
-        public frmSettings( frmMain MainForm )
+        public FrmSettings( FrmMain mainForm )
         {
-            InitializeComponent();
-            this.MainForm = MainForm;
+            this.InitializeComponent();
+            this._mainForm = mainForm;
         }
 
-        private void getSettings()
+        private void GetSettings()
         {
-            cbClearTempFolder.Checked = MainForm.clearTempFolder;
-            tbTorrentClientPath.Text = MainForm.torrentClientPath;
-            tbTmpFolder.Text = MainForm.tmpFolderPath;
+            this.cbClearTempFolder.Checked = this._mainForm.ClearTempFolder;
+            this.tbTorrentClientPath.Text = this._mainForm.TorrentClientPath;
+            this.tbTmpFolder.Text = this._mainForm.TmpFolderPath;
         }
 
-        private void saveSettings()
+        private void SaveSettings()
         {
-            MainForm.clearTempFolder = cbClearTempFolder.Checked;
-            MainForm.torrentClientPath = tbTorrentClientPath.Text;
-            MainForm.tmpFolderPath = tbTmpFolder.Text;
+            this._mainForm.ClearTempFolder = this.cbClearTempFolder.Checked;
+            this._mainForm.TorrentClientPath = this.tbTorrentClientPath.Text;
+            this._mainForm.TmpFolderPath = this.tbTmpFolder.Text;
         }
 
         private void btnCancel_Click( object sender, EventArgs e )
@@ -34,31 +38,31 @@ namespace ExUa_Torrents
 
         private void frmSettings_Load( object sender, EventArgs e )
         {
-            getSettings();
+            this.GetSettings();
         }
 
         private void btnOk_Click( object sender, EventArgs e )
         {
-            saveSettings();
-            MainForm.saveSettings();
+            this.SaveSettings();
+            this._mainForm.SaveSettings();
             this.Close();
         }
 
         private void btnSelectTorrentPath_Click( object sender, EventArgs e )
         {
-            ofd1.FileName = tbTorrentClientPath.Text;
-            if ( ofd1.ShowDialog() == DialogResult.OK )
+            this.ofd1.FileName = this.tbTorrentClientPath.Text;
+            if ( this.ofd1.ShowDialog() == DialogResult.OK )
             {
-                tbTorrentClientPath.Text = ofd1.FileName;
+                this.tbTorrentClientPath.Text = this.ofd1.FileName;
             }
         }
 
         private void btnSelectTempFolder_Click( object sender, EventArgs e )
         {
-            fbd1.SelectedPath = tbTmpFolder.Text;
-            if ( fbd1.ShowDialog() == DialogResult.OK )
+            this.fbd1.SelectedPath = this.tbTmpFolder.Text;
+            if ( this.fbd1.ShowDialog() == DialogResult.OK )
             {
-                tbTmpFolder.Text = fbd1.SelectedPath;
+                this.tbTmpFolder.Text = this.fbd1.SelectedPath;
             }
         }
     }

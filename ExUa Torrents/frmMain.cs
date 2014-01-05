@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Using
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,244 +10,252 @@ using Donate;
 using ExtensionMethods;
 using Ini;
 
+#endregion
+
 namespace ExUa_Torrents
 {
-    public partial class frmMain : Form
+    public partial class FrmMain : Form
     {
-        List<ExUaFile> files;
-        ExUa eu = null;
-        SaveHistory history = null;
-        Thread thr = null;
-        public string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
-        public string tmpFolderPath = "C:\\tmpExUa";
-        public bool clearTempFolder = false;
-        public long selectedSize = 0;
+        private List<ExUaFile> _files;
+        private ExUa _eu;
+        private SaveHistory _history;
+        private Thread _thr;
+        public string TorrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
+        public string TmpFolderPath = "C:\\tmpExUa";
+        public bool ClearTempFolder = false;
+        private long _selectedSize;
 
-        public frmMain()
+        public FrmMain()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
-        private void checkDonateDll()
+        private void CheckDonateDll()
         {
-            if ( !File.Exists( Application.StartupPath + @"\Donate.dll" ) )
+            if ( File.Exists( Application.StartupPath + @"\Donate.dll" ) )
             {
-                MessageBox.Show( "Верните Donate.dll!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-                Application.Exit();
+                return;
+            }
+            MessageBox.Show( "Верните Donate.dll!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
+            Application.Exit();
+        }
+
+        private void LoadSettings()
+        {
+            IniFile ini = new IniFile( Application.StartupPath + @"\Settings.ini" );
+            this.TorrentClientPath = ini.Read( "TorrentClientPath", "Options", this.TorrentClientPath );
+            this.TmpFolderPath = ini.Read( "TmpFolderPath", "Options", this.TmpFolderPath );
+            this.ClearTempFolder = bool.Parse( ini.Read( "ClearTmpFolder", "Options", this.ClearTempFolder.ToString() ) );
+        }
+
+        public void SaveSettings()
+        {
+            IniFile ini = new IniFile( Application.StartupPath + @"\Settings.ini" );
+            ini.Write( "TorrentClientPath", this.TorrentClientPath, "Options" );
+            ini.Write( "TmpFolderPath", this.TmpFolderPath, "Options" );
+            ini.Write( "ClearTmpFolder", this.ClearTempFolder.ToString(), "Options" );
+        }
+
+        private void GetPaths()
+        {
+            this.cbTorrentSavePath.Items.Clear();
+            this.cbTorrentSavePath.Items.AddRange( this._history.GetPaths() );
+            if ( this.cbTorrentSavePath.Items.Count > 0 )
+            {
+                this.cbTorrentSavePath.SelectedIndex = 0;
             }
         }
 
-        public void loadSettings()
+        private void PrintFiles()
         {
-            IniFile ini = new IniFile( Application.StartupPath + @"\Settings.ini" );
-            torrentClientPath = ini.Read( "TorrentClientPath", "Options", torrentClientPath );
-            tmpFolderPath = ini.Read( "TmpFolderPath", "Options", tmpFolderPath );
-            clearTempFolder = bool.Parse( ini.Read( "ClearTmpFolder", "Options", clearTempFolder.ToString() ) );
-        }
-
-        public void saveSettings()
-        {
-            IniFile ini = new IniFile( Application.StartupPath + @"\Settings.ini" );
-            ini.Write( "TorrentClientPath", torrentClientPath, "Options" );
-            ini.Write( "TmpFolderPath", tmpFolderPath, "Options" );
-            ini.Write( "ClearTmpFolder", clearTempFolder.ToString(), "Options" );
-        }
-
-        private void getPaths()
-        {
-            cbTorrentSavePath.Items.Clear();
-            cbTorrentSavePath.Items.AddRange( this.history.getPaths() );
-            if ( cbTorrentSavePath.Items.Count > 0 )
-            {
-                cbTorrentSavePath.SelectedIndex = 0;
-            }
-        }
-
-        private void printFiles()
-        {
-            lvFiles.Items.Clear();
-            for ( int i = 0; i < files.Count; i++ )
+            this.lvFiles.Items.Clear();
+            foreach ( ExUaFile file in this._files )
             {
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = files[ i ].name;
-                lvi.SubItems.Add( ExMethods.getSizeReadable( files[ i ].size ) );
-                lvFiles.Items.Add( lvi );
+                lvi.Text = file.Name;
+                lvi.SubItems.Add( ExMethods.getSizeReadable( file.Size ) );
+                this.lvFiles.Items.Add( lvi );
             }
         }
 
-        private void changeDownloadButtonTag( string tag )
+        private void ChangeDownloadButtonTag( string tag )
         {
-            btnDownload.Tag = tag;
-            if ( btnDownload.Tag.ToString() == "0" )
+            this.btnDownload.Tag = tag;
+            if ( this.btnDownload.Tag.ToString() == "0" )
             {
-                btnDownload.Text = "Получить список файлов";
+                this.btnDownload.Text = "Получить список файлов";
             }
-            else if ( btnDownload.Tag.ToString() == "1" )
+            else if ( this.btnDownload.Tag.ToString() == "1" )
             {
-                btnDownload.Text = "Загрузить";
+                this.btnDownload.Text = "Загрузить";
             }
         }
 
-        private void updProgress( object sender, UpdEventArgs e )
+        private void UpdProgress( object sender, UpdEventArgs e )
         {
-            ssStatus.Items[ 0 ].Text = "{0} / {1}".f( e.progress, e.maxProgress );
+            this.ssStatus.Items[ 0 ].Text = "{0} / {1}".f( e.Progress, e.MaxProgress );
         }
 
-        private void work()
+        private void Work()
         {
-            if ( btnDownload.Tag.ToString() == "0" )
+            switch ( this.btnDownload.Tag.ToString() )
             {
-                if ( string.IsNullOrEmpty( tbLink.Text ) || tbLink.Text.IndexOf( "ex.ua/" ) < 0 )
-                {
-                    MessageBox.Show( "Укажите корректную ссылку!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-                    return;
-                }
-                string torrentSavePath = cbTorrentSavePath.Text;
-                eu = new ExUa( tmpFolderPath, torrentClientPath, torrentSavePath, clearTempFolder );
-                eu.updEvent += new EventHandler<UpdEventArgs>( updProgress );
-                eu.getFiles( tbLink.Text );
-                files = eu.getLocalFiles( rbTorrents.Checked );
-                printFiles();
-                changeDownloadButtonTag( "1" );
-            }
-            else if ( btnDownload.Tag.ToString() == "1" )
-            {
-                if ( !rbTorrents.Checked )
-                {
-                    eu.downloadFile();
-                }
-                else
-                {
-                    if ( string.IsNullOrEmpty( cbTorrentSavePath.Text ) )
+                case "0":
                     {
-                        MessageBox.Show( "Укажите путь для сохранения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-                        return;
+                        if ( string.IsNullOrEmpty( this.tbLink.Text ) || this.tbLink.Text.IndexOf( "ex.ua/" ) < 0 )
+                        {
+                            MessageBox.Show( "Укажите корректную ссылку!", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error );
+                            return;
+                        }
+                        string torrentSavePath = this.cbTorrentSavePath.Text;
+                        this._eu = new ExUa( this.TmpFolderPath, this.TorrentClientPath, torrentSavePath,
+                            this.ClearTempFolder );
+                        this._eu.UpdEvent += new EventHandler<UpdEventArgs>( this.UpdProgress );
+                        this._eu.GetFiles( this.tbLink.Text );
+                        this._files = this._eu.GetLocalFiles( this.rbTorrents.Checked );
+                        this.PrintFiles();
+                        this.ChangeDownloadButtonTag( "1" );
+                    }
+                    break;
+
+                case "1":
+                    if ( !this.rbTorrents.Checked )
+                    {
+                        this._eu.DownloadFile();
                     }
                     else
                     {
-                        eu.downloadTorrents();
+                        if ( string.IsNullOrEmpty( this.cbTorrentSavePath.Text ) )
+                        {
+                            MessageBox.Show( "Укажите путь для сохранения!", "Ошибка", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error );
+                            return;
+                        }
+                        this._eu.DownloadTorrents();
                     }
-                }
+                    break;
             }
-            ssStatus.Items[ 0 ].Text = "Завершено!";
+            this.ssStatus.Items[ 0 ].Text = "Завершено!";
         }
 
         private void btnDownload_Click( object sender, EventArgs e )
         {
-            thr = new Thread( work );
-            thr.Start();
+            this.CheckDonateDll();
+            this._thr = new Thread( this.Work );
+            this._thr.Start();
         }
 
         private void lvFiles_ItemChecked( object sender, ItemCheckedEventArgs e )
         {
             bool check = e.Item.Checked;
             int index = e.Item.Index;
-            long arrIndex = this.files[ index ].arrIndex;
-            eu.checkFile( arrIndex, check );
+            long arrIndex = this._files[ index ].ArrIndex;
+            this._eu.CheckFile( arrIndex, check );
             if ( check )
             {
-                this.selectedSize += eu.getFileSize( index );
+                this._selectedSize += this._eu.GetFileSize( index );
             }
             else
             {
-                this.selectedSize -= eu.getFileSize( index );
+                this._selectedSize -= this._eu.GetFileSize( index );
             }
-            if ( this.selectedSize < 0 )
+            if ( this._selectedSize < 0 )
             {
-                this.selectedSize = 0;
+                this._selectedSize = 0;
             }
-            ssStatus.Items[ 0 ].Text = "Размер: " + ExMethods.getSizeReadable( this.selectedSize );
+            this.ssStatus.Items[ 0 ].Text = "Размер: " + ExMethods.getSizeReadable( this._selectedSize );
         }
 
         private void tbLink_TextChanged( object sender, EventArgs e )
         {
-            changeDownloadButtonTag( "0" );
+            this.ChangeDownloadButtonTag( "0" );
         }
 
         private void lvFiles_ColumnClick( object sender, ColumnClickEventArgs e )
         {
             if ( e.Column == 0 )
             {
-                bool check = !lvFiles.Items[ 0 ].Checked;
-                for ( int i = 0; i < lvFiles.Items.Count; i++ )
+                bool check = !this.lvFiles.Items[ 0 ].Checked;
+                for ( int i = 0; i < this.lvFiles.Items.Count; i++ )
                 {
-                    lvFiles.Items[ i ].Checked = check;
+                    this.lvFiles.Items[ i ].Checked = check;
                 }
             }
         }
 
         private void rbTorrents_CheckedChanged( object sender, EventArgs e )
         {
-            changeDownloadButtonTag( "0" );
+            this.ChangeDownloadButtonTag( "0" );
         }
 
         private void rbAll_CheckedChanged( object sender, EventArgs e )
         {
-            changeDownloadButtonTag( "0" );
+            this.ChangeDownloadButtonTag( "0" );
         }
 
         private void frmMain_Load( object sender, EventArgs e )
         {
-            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
-            loadSettings();
+            CheckForIllegalCrossThreadCalls = false;
+            this.LoadSettings();
             frmDonate frm = new frmDonate();
             frm.ShowDialog();
-            history = new SaveHistory();
-            this.getPaths();
+            this._history = new SaveHistory();
+            this.GetPaths();
         }
 
         private void btnSettings_Click( object sender, EventArgs e )
         {
-            frmSettings frm = new frmSettings( this );
+            FrmSettings frm = new FrmSettings( this );
             frm.ShowDialog();
         }
 
         private void btnSelDir_Click( object sender, EventArgs e )
         {
-            fbd1.SelectedPath = cbTorrentSavePath.Text;
-            if ( fbd1.ShowDialog() == DialogResult.OK )
+            this.fbd1.SelectedPath = this.cbTorrentSavePath.Text;
+            if ( this.fbd1.ShowDialog() == DialogResult.OK )
             {
-                history.addPath( fbd1.SelectedPath );
-                this.getPaths();
-                cbTorrentSavePath.Text = fbd1.SelectedPath;
+                this._history.AddPath( this.fbd1.SelectedPath );
+                this.GetPaths();
+                this.cbTorrentSavePath.Text = this.fbd1.SelectedPath;
             }
         }
 
         private void frmMain_FormClosed( object sender, FormClosedEventArgs e )
         {
-            history.saveHistory();
-            if ( thr != null )
+            this._history.saveHistory();
+            if ( this._thr != null )
             {
-                thr.Abort();
+                this._thr.Abort();
             }
-            if ( eu != null )
+            if ( this._eu != null )
             {
-                eu.clearTmpFolder();
+                this._eu.ClearTmpFolder();
             }
         }
 
         private void tmpCheckClipbrd_Tick( object sender, EventArgs e )
         {
             string text = Clipboard.GetText();
-            if ( ( text.IndexOf( "ex.ua/" ) >= 0 && tbLink.Text != text && !tbLink.Focused )
-                || ( string.IsNullOrEmpty( tbLink.Text ) && text.IndexOf( "ex.ua/view/" ) >= 0 ) )
+            if ( ( text.IndexOf( "ex.ua/" ) >= 0 && this.tbLink.Text != text && !this.tbLink.Focused )
+                 || ( string.IsNullOrEmpty( this.tbLink.Text ) && text.IndexOf( "ex.ua/view/" ) >= 0 ) )
             {
-                tbLink.Text = text;
-                tbLink.SelectionStart = tbLink.TextLength;
+                this.tbLink.Text = text;
+                this.tbLink.SelectionStart = this.tbLink.TextLength;
             }
         }
 
         private void tbLink_KeyDown( object sender, KeyEventArgs e )
         {
-            if ( e.KeyCode == Keys.Enter && btnDownload.Tag.ToString() == "0" )
+            if ( e.KeyCode == Keys.Enter && this.btnDownload.Tag.ToString() == "0" )
             {
-                btnDownload.PerformClick();
+                this.btnDownload.PerformClick();
             }
         }
 
         private void llSite_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
-            Process.Start( @"http://softez.pp.ua/" );
+            Process.Start( @"http://www.softez.pp.ua/" );
         }
 
         private void llDonate_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )

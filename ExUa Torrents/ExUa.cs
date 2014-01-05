@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Using
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,66 +12,67 @@ using System.Windows.Forms;
 using ExtensionMethods;
 using RestSharp;
 
+#endregion
+
 namespace ExUa_Torrents
 {
     public class UpdEventArgs : EventArgs
     {
-        public int progress { get; set; }
-        public int maxProgress { get; set; }
+        public int Progress { get; set; }
+        public int MaxProgress { get; set; }
     }
 
     public class ExUa
     {
-        const string getFileName = @"<a\shref='/get/[0-9]+'\stitle='[^']+'(\srel='nofollow')?>([^<>]+)</a>";
-        const string getSize = @"<td\salign=right\swidth=200\sclass=small><b>([0-9,]+)</b>";
-        const string loadLink = @"<a\shref='(/load/[0-9]+)'\srel='nofollow'>";
-        const string loadTorrentLink = @"<a\shref='(/torrent/([0-9]+))'\srel='nofollow'>";
-        const string fileId = @"<a\shref='/load/([0-9]+)'\srel='nofollow'>";
+        private const string GetFileName = @"<a\shref='/get/[0-9]+'\stitle='[^']+'(\srel='nofollow')?>([^<>]+)</a>";
+        private const string GetSize = @"<td\salign=right\swidth=200\sclass=small><b>([0-9,]+)</b>";
+        private const string LoadLink = @"<a\shref='(/load/[0-9]+)'\srel='nofollow'>";
+        private const string LoadTorrentLink = @"<a\shref='(/torrent/([0-9]+))'\srel='nofollow'>";
+        private const string FileId = @"<a\shref='/load/([0-9]+)'\srel='nofollow'>";
 
-        List<ExUaFile> files;
-        bool downloading = false;
-        bool clearTempFolder = false;
-        string tmpFolderPath;
-        string torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
-        string torrentSavePath;
-        public event EventHandler<UpdEventArgs> updEvent = delegate { };
+        private readonly List<ExUaFile> _files;
+        private bool _downloading = false;
+        private readonly bool _clearTempFolder = false;
+        private readonly string _tmpFolderPath;
+        private readonly string _torrentClientPath = "C:\\Program Files (x86)\\BitTorrent\\BitTorrent.exe";
+        private readonly string _torrentSavePath;
+        public event EventHandler<UpdEventArgs> UpdEvent = delegate { };
 
         public ExUa( string tmpFolderPath, string torrentClientPath, string torrentSavePath,
             bool clearTempFolder )
         {
-            this.files = new List<ExUaFile>();
-            this.tmpFolderPath = tmpFolderPath;
-            this.torrentClientPath = torrentClientPath;
-            this.torrentSavePath = torrentSavePath;
-            this.clearTempFolder = clearTempFolder;
+            this._files = new List<ExUaFile>();
+            this._tmpFolderPath = tmpFolderPath;
+            this._torrentClientPath = torrentClientPath;
+            this._torrentSavePath = torrentSavePath;
+            this._clearTempFolder = clearTempFolder;
         }
 
-        public long cleanSize( string size )
+        private static long CleanSize( string size )
         {
-            long result = 0;
             size = size.Replace( ",", "" );
-            result = long.Parse( size );
+            long result = long.Parse( size );
             return result;
         }
 
-        public string getTorrentClientByPath( string path )
+        private static string GetTorrentClientByPath( string path )
         {
             return Path.GetFileNameWithoutExtension( path );
         }
 
-        public void downloadComplete( object sender, AsyncCompletedEventArgs e )
+        private void DownloadComplete( object sender, AsyncCompletedEventArgs e )
         {
-            this.downloading = false;
+            this._downloading = false;
         }
 
-        public void downloadFile( string link, string fileName )
+        private void DownloadFile( string link, string fileName )
         {
-            downloading = true;
+            this._downloading = true;
             using ( WebClient webClient = new WebClient() )
             {
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler( downloadComplete );
+                webClient.DownloadFileCompleted += this.DownloadComplete;
                 webClient.DownloadFileAsync( new Uri( @"http://www.ex.ua" + link ), fileName );
-                while ( downloading )
+                while ( this._downloading )
                 {
                     Application.DoEvents();
                     Thread.Sleep( 100 );
@@ -78,7 +81,8 @@ namespace ExUa_Torrents
         }
 
         #region getInfo
-        public string getUrl( string url )
+
+        private static string OpenUrl( string url )
         {
             var cookieJar = new CookieContainer();
             RestClient client = new RestClient( url );
@@ -90,10 +94,10 @@ namespace ExUa_Torrents
             return response.Content;
         }
 
-        public List<string> getFilesName( string content )
+        private static List<string> GetFilesName( string content )
         {
             List<string> result = new List<string>();
-            Regex regex = new Regex( getFileName );
+            Regex regex = new Regex( GetFileName );
             MatchCollection matchs = regex.Matches( content );
             for ( int i = 0; i < matchs.Count; i++ )
             {
@@ -102,22 +106,22 @@ namespace ExUa_Torrents
             return result;
         }
 
-        public List<long> getFilesSize( string content )
+        private List<long> GetFilesSize( string content )
         {
             List<long> result = new List<long>();
-            Regex regex = new Regex( getSize );
+            Regex regex = new Regex( GetSize );
             MatchCollection matchs = regex.Matches( content );
             for ( int i = 0; i < matchs.Count; i++ )
             {
-                result.Add( cleanSize( matchs[ i ].Groups[ 1 ].ToString() ) );
+                result.Add( CleanSize( matchs[ i ].Groups[ 1 ].ToString() ) );
             }
             return result;
         }
 
-        public List<string> getFilesLoadLink( string content )
+        private List<string> GetFilesLoadLink( string content )
         {
             List<string> result = new List<string>();
-            Regex regex = new Regex( loadLink );
+            Regex regex = new Regex( LoadLink );
             MatchCollection matchs = regex.Matches( content );
             for ( int i = 0; i < matchs.Count; i++ )
             {
@@ -126,10 +130,10 @@ namespace ExUa_Torrents
             return result;
         }
 
-        public Dictionary<string, string> getFilesTorrentLink( string content )
+        private Dictionary<string, string> GetFilesTorrentLink( string content )
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
-            Regex regex = new Regex( loadTorrentLink );
+            Regex regex = new Regex( LoadTorrentLink );
             MatchCollection matchs = regex.Matches( content );
             for ( int i = 0; i < matchs.Count; i++ )
             {
@@ -138,10 +142,10 @@ namespace ExUa_Torrents
             return result;
         }
 
-        public List<long> getFilesId( string content )
+        private List<long> GetFilesId( string content )
         {
             List<long> result = new List<long>();
-            Regex regex = new Regex( fileId );
+            Regex regex = new Regex( FileId );
             MatchCollection matchs = regex.Matches( content );
             for ( int i = 0; i < matchs.Count; i++ )
             {
@@ -149,101 +153,102 @@ namespace ExUa_Torrents
             }
             return result;
         }
+
         #endregion
 
-        public void getFiles( string url )
+        public void GetFiles( string url )
         {
-            string content = getUrl( url );
-            List<string> filesName = getFilesName( content );
-            List<long> filesSize = getFilesSize( content );
-            List<string> filesLoadLink = getFilesLoadLink( content );
-            Dictionary<string, string> filesLoadTorrentLink = getFilesTorrentLink( content );
-            List<long> filesId = getFilesId( content );
+            string content = OpenUrl( url );
+            List<string> filesName = GetFilesName( content );
+            List<long> filesSize = this.GetFilesSize( content );
+            List<string> filesLoadLink = this.GetFilesLoadLink( content );
+            Dictionary<string, string> filesLoadTorrentLink = this.GetFilesTorrentLink( content );
+            List<long> filesId = this.GetFilesId( content );
             for ( int i = 0; i < filesName.Count; i++ )
             {
                 ExUaFile exFile = new ExUaFile();
-                exFile.name = filesName[ i ];
-                exFile.size = filesSize[ i ];
-                exFile.url = filesLoadLink[ i ];
-                exFile.fileId = filesId[ i ];
-                exFile.arrIndex = i;
-                if ( filesLoadTorrentLink.ContainsKey( exFile.fileId.ToString() ) )
+                exFile.Name = filesName[ i ];
+                exFile.Size = filesSize[ i ];
+                exFile.Url = filesLoadLink[ i ];
+                exFile.FileId = filesId[ i ];
+                exFile.ArrIndex = i;
+                if ( filesLoadTorrentLink.ContainsKey( exFile.FileId.ToString() ) )
                 {
-                    exFile.torrentUrl = filesLoadTorrentLink[ exFile.fileId.ToString() ];
+                    exFile.TorrentUrl = filesLoadTorrentLink[ exFile.FileId.ToString() ];
                 }
-                this.files.Add( exFile );
+                this._files.Add( exFile );
             }
         }
 
-        public List<ExUaFile> getLocalFiles( bool torrent )
+        public List<ExUaFile> GetLocalFiles( bool torrent )
         {
             List<ExUaFile> result = new List<ExUaFile>();
-            for ( int i = 0; i < this.files.Count; i++ )
+            foreach ( ExUaFile file in this._files )
             {
                 if ( torrent )
                 {
-                    if ( !string.IsNullOrEmpty( this.files[ i ].torrentUrl ) )
+                    if ( !string.IsNullOrEmpty( file.TorrentUrl ) )
                     {
-                        result.Add( this.files[ i ] );
+                        result.Add( file );
                     }
                 }
                 else
                 {
-                    result.Add( this.files[ i ] );
+                    result.Add( file );
                 }
             }
             return result;
         }
 
-        public void checkFile( long arrIndex, bool check )
+        public void CheckFile( long arrIndex, bool check )
         {
-            this.files[ (int)arrIndex ].check = check;
+            this._files[ (int)arrIndex ].Check = check;
         }
 
-        public void clearTmpFolder()
+        public void ClearTmpFolder()
         {
-            if ( clearTempFolder && Directory.Exists( tmpFolderPath ) )
+            if ( this._clearTempFolder && Directory.Exists( this._tmpFolderPath ) )
             {
-                foreach ( string file in System.IO.Directory.GetFiles( tmpFolderPath ) )
+                foreach ( string file in Directory.GetFiles( this._tmpFolderPath ) )
                 {
-                    System.IO.File.Delete( file );
+                    File.Delete( file );
                 }
-                foreach ( string subDirectory in System.IO.Directory.GetDirectories( tmpFolderPath ) )
+                foreach ( string subDirectory in Directory.GetDirectories( this._tmpFolderPath ) )
                 {
-                    System.IO.Directory.Delete( subDirectory, true );
-
+                    Directory.Delete( subDirectory, true );
                 }
             }
         }
 
-        public void downloadFile()
+        public void DownloadFile()
         {
             List<string> downFiles = new List<string>();
             UpdEventArgs args = new UpdEventArgs();
-            args.progress = 0;
-            args.maxProgress = this.files.Count;
-            updEvent( this, args );
-            for ( int i = 0; i < this.files.Count; i++ )
+            args.Progress = 0;
+            args.MaxProgress = this._files.Count;
+            this.UpdEvent( this, args );
+            foreach ( ExUaFile file in this._files )
             {
-                if ( this.files[ i ].check )
+                if ( file.Check )
                 {
-                    downFiles.Add( "http://www.ex.ua" + this.files[ i ].url );
+                    downFiles.Add( "http://www.ex.ua" + file.Url );
                 }
-                args.progress++;
-                updEvent( this, args );
+                args.Progress++;
+                this.UpdEvent( this, args );
             }
-            if ( downFiles.Count > 0 )
+            if ( downFiles.Count <= 0 )
             {
-                string fileName = tmpFolderPath + @"\tmp.urls";
-                downFiles.SaveToFile( fileName );
-                Process.Start( fileName );
+                return;
             }
+            string fileName = this._tmpFolderPath + @"\tmp.urls";
+            downFiles.SaveToFile( fileName );
+            Process.Start( fileName );
         }
 
-        public void injectTorrent( string file, string savePath )
+        private void InjectTorrent( string file, string savePath )
         {
             string arguments = string.Empty;
-            string torrentClient = getTorrentClientByPath( torrentClientPath );
+            string torrentClient = GetTorrentClientByPath( this._torrentClientPath );
             if ( torrentClient == "BitTorrent" || torrentClient == "uTorrent" )
             {
                 arguments = @"/DIRECTORY ""{0}"" ""{1}""".f( savePath, file );
@@ -252,32 +257,32 @@ namespace ExUa_Torrents
             {
                 arguments = @"/DIRECTORY ""{0}"" - o ""{1}"" - s".f( file, savePath );
             }
-            Process.Start( torrentClientPath, arguments );
+            Process.Start( this._torrentClientPath, arguments );
         }
 
-        public void downloadTorrents()
+        public void DownloadTorrents()
         {
             UpdEventArgs args = new UpdEventArgs();
-            args.progress = 0;
-            args.maxProgress = this.files.Count;
-            updEvent( this, args );
-            for ( int i = 0; i < this.files.Count; i++ )
+            args.Progress = 0;
+            args.MaxProgress = this._files.Count;
+            this.UpdEvent( this, args );
+            foreach ( ExUaFile file in this._files )
             {
-                if ( this.files[ i ].check )
+                if ( file.Check )
                 {
-                    string torrentUrl = this.files[ i ].torrentUrl;
-                    string fileName = tmpFolderPath + @"\" + this.files[ i ].name + ".torrent";
-                    downloadFile( torrentUrl, fileName );
-                    injectTorrent( fileName, torrentSavePath );
+                    string torrentUrl = file.TorrentUrl;
+                    string fileName = this._tmpFolderPath + @"\" + file.Name + ".torrent";
+                    this.DownloadFile( torrentUrl, fileName );
+                    this.InjectTorrent( fileName, this._torrentSavePath );
                 }
-                args.progress++;
-                updEvent( this, args );
+                args.Progress++;
+                this.UpdEvent( this, args );
             }
         }
 
-        public long getFileSize( int index )
+        public long GetFileSize( int index )
         {
-            return this.files[ index ].size;
+            return this._files[ index ].Size;
         }
     }
 }
