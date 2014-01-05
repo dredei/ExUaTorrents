@@ -174,7 +174,7 @@ namespace ExUa_Torrents
 
         private void lvFiles_ColumnClick( object sender, ColumnClickEventArgs e )
         {
-            if ( e.Column == 0 )
+            if ( e.Column == 0 && this.lvFiles.Items.Count > 0 )
             {
                 bool check = !this.lvFiles.Items[ 0 ].Checked;
                 for ( int i = 0; i < this.lvFiles.Items.Count; i++ )
